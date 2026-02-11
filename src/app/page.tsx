@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Github,
   Linkedin,
-  Mail,
   ExternalLink,
   FileText,
   Search,
@@ -31,7 +30,7 @@ type Project = {
     code?: string;
     demo?: string;
   };
-  impact?: string; // short “so what” line
+  impact?: string;
 };
 
 const PROFILE = {
@@ -41,7 +40,7 @@ const PROFILE = {
   email: "sadaqatalishakir786@gmail.com",
   github: "https://github.com/sadaqat-ali-shaker",
   linkedin: "https://www.linkedin.com/in/sadaqatalishaker/",
-  resumeUrl: "/Sadaqat-Ali-Shaker-CV.pdf", // put PDF inside /public
+  resumeUrl: "/Sadaqat-Ali-Shaker-CV.pdf",
 };
 
 const QUICK_PITCH = [
@@ -54,7 +53,8 @@ const PROJECTS: Project[] = [
     name: "Fake Signature Detection (AI)",
     category: "AI/ML",
     tag: "Computer Vision + Classification",
-    impact: "Built an ML pipeline to detect forged signatures using feature engineering and model training.",
+    impact:
+      "Built an ML pipeline to detect forged signatures using feature engineering and model training.",
     bullets: [
       "Designed preprocessing + feature extraction workflow for signature images.",
       "Trained and evaluated classification models on labeled datasets; improved robustness via normalization/augmentation.",
@@ -67,7 +67,8 @@ const PROJECTS: Project[] = [
     name: "Attendance Management System",
     category: "Backend/Apps",
     tag: "Tkinter + MySQL Desktop App",
-    impact: "A complete CRUD system with validation + persistence for student attendance workflows.",
+    impact:
+      "A complete CRUD system with validation + persistence for student attendance workflows.",
     bullets: [
       "Built a desktop GUI with role-friendly flows (add/update/search records).",
       "Connected to MySQL backend for data persistence with input validation.",
@@ -80,7 +81,8 @@ const PROJECTS: Project[] = [
     name: "Library Management System (MongoDB)",
     category: "Databases",
     tag: "NoSQL + GUI",
-    impact: "NoSQL library operations tool: issue/return/catalog with MongoDB-backed storage.",
+    impact:
+      "NoSQL library operations tool: issue/return/catalog with MongoDB-backed storage.",
     bullets: [
       "Modeled collections and relationships for books, members, and transactions.",
       "Integrated MongoDB (PyMongo) with a Tkinter frontend for daily operations.",
@@ -93,7 +95,8 @@ const PROJECTS: Project[] = [
     name: "Movie Knowledge Graph",
     category: "Databases",
     tag: "Neo4j + Cypher",
-    impact: "Graph database modeling + interactive querying for actor/director/title relationships.",
+    impact:
+      "Graph database modeling + interactive querying for actor/director/title relationships.",
     bullets: [
       "Created graph schema and ran Cypher queries for relationship exploration.",
       "Built a Python interface for interactive lookups and query execution.",
@@ -188,13 +191,21 @@ function useDarkMode() {
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80 dark:text-white/80">
+    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">
       {children}
     </span>
   );
 }
 
-function Chip({ children, active, onClick }: { children: React.ReactNode; active?: boolean; onClick?: () => void }) {
+function Chip({
+  children,
+  active,
+  onClick,
+}: {
+  children: React.ReactNode;
+  active?: boolean;
+  onClick?: () => void;
+}) {
   return (
     <button
       onClick={onClick}
@@ -289,16 +300,34 @@ export default function Page() {
     }
   };
 
+  // Guaranteed email open: try mailto; if blocked/no handler => open Gmail compose
+  const openEmail = () => {
+    const subject = "Hello Sadaqat";
+    const body = "Hi Sadaqat,%0D%0A%0D%0A";
+    const mailto = `mailto:${encodeURIComponent(PROFILE.email)}?subject=${encodeURIComponent(
+      subject
+    )}&body=${body}`;
+
+    // Try mailto first
+    window.location.href = mailto;
+
+    // Fallback: open Gmail compose after a tiny delay (only if mailto doesn't launch)
+    setTimeout(() => {
+      const gmail = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+        PROFILE.email
+      )}&su=${encodeURIComponent(subject)}&body=${body}`;
+      window.open(gmail, "_blank", "noopener,noreferrer");
+    }, 300);
+  };
+
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
-      {/* Background glow */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute bottom-[-220px] right-[-220px] h-[520px] w-[520px] rounded-full bg-white/5 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-6xl px-5 py-10">
-        {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{PROFILE.name}</h1>
@@ -310,6 +339,7 @@ export default function Page() {
             <IconButton label="Toggle theme" onClick={toggle}>
               {dark ? <Sun size={18} /> : <Moon size={18} />}
             </IconButton>
+
             <a
               href={PROFILE.github}
               target="_blank"
@@ -319,6 +349,7 @@ export default function Page() {
             >
               <Github size={18} />
             </a>
+
             <a
               href={PROFILE.linkedin}
               target="_blank"
@@ -328,6 +359,7 @@ export default function Page() {
             >
               <Linkedin size={18} />
             </a>
+
             <Link
               href={PROFILE.resumeUrl}
               className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition"
@@ -337,7 +369,6 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -361,16 +392,18 @@ export default function Page() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <a
-                href="mailto:sadaqatalishakir786@gmail.com?subject=Hello%20Sadaqat&body=Hi%20Sadaqat%2C%0A%0A"
+              <button
+                type="button"
+                onClick={openEmail}
                 className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-zinc-950 hover:opacity-90"
-                  >
-                        Email me
-              </a>
+              >
+                Email me
+              </button>
 
               <IconButton label="Copy email" onClick={copyEmail}>
                 <Copy size={18} />
               </IconButton>
+
               <a
                 href={PROFILE.linkedin}
                 target="_blank"
@@ -383,9 +416,11 @@ export default function Page() {
           </div>
         </motion.div>
 
-        {/* Featured projects */}
         <div className="mt-10">
-          <SectionTitle title="Featured Projects" subtitle="Click a project to view details. Keep only your strongest 5–6 publicly." />
+          <SectionTitle
+            title="Featured Projects"
+            subtitle="Click a project to view details. Keep only your strongest 5–6 publicly."
+          />
 
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             {featured.map((p) => (
@@ -411,7 +446,10 @@ export default function Page() {
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   {p.tech.slice(0, 4).map((t) => (
-                    <span key={t} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+                    <span
+                      key={t}
+                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70"
+                    >
                       {t}
                     </span>
                   ))}
@@ -430,7 +468,6 @@ export default function Page() {
           </div>
         </div>
 
-        {/* All Projects with search/filters */}
         <div className="mt-10">
           <SectionTitle title="All Projects" subtitle="Search + filter to quickly show recruiters what matters." />
 
@@ -468,9 +505,7 @@ export default function Page() {
                   </Chip>
                 ))}
                 {techOptions.length > 12 ? (
-                  <span className="text-xs text-white/50 self-center">
-                    (Tip: use search for more tech)
-                  </span>
+                  <span className="text-xs text-white/50 self-center">(Tip: use search for more tech)</span>
                 ) : null}
               </div>
             </div>
@@ -517,7 +552,6 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Experience */}
         <div className="mt-10">
           <SectionTitle title="Experience" subtitle="Make this section real: remove placeholders, keep bullets short, outcome-driven." />
 
@@ -549,7 +583,6 @@ export default function Page() {
             })}
           </div>
 
-          {/* Quick icons row */}
           <div className="mt-4 flex flex-wrap gap-2 text-sm text-white/70">
             <span className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2">
               <Database size={16} /> DB Systems
@@ -566,7 +599,6 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Skills */}
         <div className="mt-10">
           <SectionTitle title="Skills" subtitle="Grouped skills look more senior than a long random list." />
 
@@ -586,20 +618,26 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Footer */}
         <footer className="mt-12 border-t border-white/10 pt-6 text-sm text-white/50">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <p>© {new Date().getFullYear()} {PROFILE.name}. Built with Next.js.</p>
+            <p>
+              © {new Date().getFullYear()} {PROFILE.name}. Built with Next.js.
+            </p>
             <div className="flex flex-wrap gap-3">
-              <a className="hover:text-white/80" href={PROFILE.github} target="_blank" rel="noreferrer">GitHub</a>
-              <a className="hover:text-white/80" href={PROFILE.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
-              <a className="hover:text-white/80" href={`mailto:${PROFILE.email}`}>Email</a>
+              <a className="hover:text-white/80" href={PROFILE.github} target="_blank" rel="noreferrer">
+                GitHub
+              </a>
+              <a className="hover:text-white/80" href={PROFILE.linkedin} target="_blank" rel="noreferrer">
+                LinkedIn
+              </a>
+              <a className="hover:text-white/80" href={`mailto:${PROFILE.email}`}>
+                Email
+              </a>
             </div>
           </div>
         </footer>
       </div>
 
-      {/* Project Modal */}
       <AnimatePresence>
         {selected ? (
           <motion.div
