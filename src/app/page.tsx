@@ -18,6 +18,7 @@ import {
   Database,
   Brain,
   Terminal,
+  Phone,
 } from "lucide-react";
 
 type Project = {
@@ -26,10 +27,6 @@ type Project = {
   tag: string;
   bullets: string[];
   tech: string[];
-  links: {
-    code?: string;
-    demo?: string;
-  };
   impact?: string;
 };
 
@@ -38,6 +35,8 @@ const PROFILE = {
   title: "Computer Science Undergraduate | Software & Data Engineering",
   location: "Pakistan",
   email: "sadaqatalishakir786@gmail.com",
+  phone: "+92 0375 568 039", // display
+  phoneDial: "+920375568039", // for tel:/wa.me
   github: "https://github.com/sadaqat-ali-shaker",
   linkedin: "https://www.linkedin.com/in/sadaqatalishaker/",
   resumeUrl: "/Sadaqat-Ali-Shaker-CV.pdf",
@@ -61,7 +60,6 @@ const PROJECTS: Project[] = [
       "Documented experiments and evaluation to support reproducibility.",
     ],
     tech: ["Python", "Machine Learning", "Computer Vision"],
-    links: {},
   },
   {
     name: "Attendance Management System",
@@ -75,7 +73,6 @@ const PROJECTS: Project[] = [
       "Structured code for maintainability (modules, reusable components).",
     ],
     tech: ["Python", "Tkinter", "MySQL", "SQL"],
-    links: {},
   },
   {
     name: "Library Management System (MongoDB)",
@@ -84,12 +81,11 @@ const PROJECTS: Project[] = [
     impact:
       "NoSQL library operations tool: issue/return/catalog with MongoDB-backed storage.",
     bullets: [
-      "Modeled collections and relationships for books, members, and transactions.",
+      "Modeled collections for books, members, and transactions.",
       "Integrated MongoDB (PyMongo) with a Tkinter frontend for daily operations.",
       "Implemented search + status tracking to support smooth workflows.",
     ],
     tech: ["Python", "Tkinter", "MongoDB", "PyMongo"],
-    links: {},
   },
   {
     name: "Movie Knowledge Graph",
@@ -102,7 +98,6 @@ const PROJECTS: Project[] = [
       "Built a Python interface for interactive lookups and query execution.",
     ],
     tech: ["Neo4j", "Cypher", "Python"],
-    links: {},
   },
   {
     name: "E-commerce Data Cleaner",
@@ -116,20 +111,17 @@ const PROJECTS: Project[] = [
       "Wrote reusable scripts for repeatable cleaning runs.",
     ],
     tech: ["Python", "Pandas", "Web Scraping"],
-    links: {},
   },
   {
     name: "Linux Automation Scripts",
     category: "DevOps/Linux",
     tag: "Bash Automation",
-    impact:
-      "Reusable scripts for log monitoring, backups, and automation tasks on Linux.",
+    impact: "Reusable scripts for log monitoring, backups, and automation tasks on Linux.",
     bullets: [
       "Built scripts for log monitoring and automated backups.",
       "Improved reliability with parameterization and error handling patterns.",
     ],
     tech: ["Linux", "Bash", "Automation"],
-    links: {},
   },
 ];
 
@@ -294,13 +286,21 @@ export default function Page() {
 
   const featured = useMemo(() => PROJECTS.slice(0, 4), []);
 
-  const copyEmail = async () => {
+  const copyText = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(PROFILE.email);
+      await navigator.clipboard.writeText(text);
     } catch {
       // ignore
     }
   };
+
+  // Gmail compose link (works even if mailto is blocked / no mail client configured)
+  const gmailComposeUrl = useMemo(() => {
+    const to = encodeURIComponent(PROFILE.email);
+    const su = encodeURIComponent("Hello Sadaqat");
+    const body = encodeURIComponent("Hi Sadaqat,\n\n");
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${body}`;
+  }, []);
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
@@ -323,6 +323,7 @@ export default function Page() {
             <IconButton label="Toggle theme" onClick={toggle}>
               {dark ? <Sun size={18} /> : <Moon size={18} />}
             </IconButton>
+
             <a
               href={PROFILE.github}
               target="_blank"
@@ -332,6 +333,7 @@ export default function Page() {
             >
               <Github size={18} />
             </a>
+
             <a
               href={PROFILE.linkedin}
               target="_blank"
@@ -341,6 +343,7 @@ export default function Page() {
             >
               <Linkedin size={18} />
             </a>
+
             <Link
               href={PROFILE.resumeUrl}
               className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition"
@@ -371,18 +374,26 @@ export default function Page() {
                 <Badge>Linux</Badge>
                 <Badge>Hadoop / Airflow</Badge>
               </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-white/60">
+                <span className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2">
+                  <Phone size={16} />
+                  {PROFILE.phone}
+                </span>
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              {/* ✅ FIXED: pure mailto link (no popup blocking) */}
               <a
-                href={`mailto:${PROFILE.email}`}
+                href={gmailComposeUrl}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-zinc-950 hover:opacity-90"
               >
-                Email me
+                Email me <ExternalLink size={16} />
               </a>
 
-              <IconButton label="Copy email" onClick={copyEmail}>
+              <IconButton label="Copy email" onClick={() => copyText(PROFILE.email)}>
                 <Copy size={18} />
               </IconButton>
 
@@ -393,6 +404,13 @@ export default function Page() {
                 className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition"
               >
                 View LinkedIn <ExternalLink size={16} />
+              </a>
+
+              <a
+                href={`tel:${PROFILE.phoneDial}`}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition"
+              >
+                Call <Phone size={16} />
               </a>
             </div>
           </div>
@@ -597,10 +615,7 @@ export default function Page() {
                 <h3 className="font-semibold">{g.group}</h3>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {g.items.map((s) => (
-                    <span
-                      key={s}
-                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/80"
-                    >
+                    <span key={s} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/80">
                       {s}
                     </span>
                   ))}
@@ -613,19 +628,12 @@ export default function Page() {
         {/* Footer */}
         <footer className="mt-12 border-t border-white/10 pt-6 text-sm text-white/50">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <p>
-              © {new Date().getFullYear()} {PROFILE.name}. Built with Next.js.
-            </p>
+            <p>© {new Date().getFullYear()} {PROFILE.name}. Built with Next.js.</p>
             <div className="flex flex-wrap gap-3">
-              <a className="hover:text-white/80" href={PROFILE.github} target="_blank" rel="noreferrer">
-                GitHub
-              </a>
-              <a className="hover:text-white/80" href={PROFILE.linkedin} target="_blank" rel="noreferrer">
-                LinkedIn
-              </a>
-              <a className="hover:text-white/80" href={`mailto:${PROFILE.email}`}>
-                Email
-              </a>
+              <a className="hover:text-white/80" href={PROFILE.github} target="_blank" rel="noreferrer">GitHub</a>
+              <a className="hover:text-white/80" href={PROFILE.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+              <a className="hover:text-white/80" href={gmailComposeUrl} target="_blank" rel="noreferrer">Email</a>
+              <a className="hover:text-white/80" href={`tel:${PROFILE.phoneDial}`}>Call</a>
             </div>
           </div>
         </footer>
@@ -673,39 +681,13 @@ export default function Page() {
 
               <div className="mt-5 flex flex-wrap gap-2">
                 {selected.tech.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80"
-                  >
+                  <span key={t} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">
                     {t}
                   </span>
                 ))}
               </div>
 
-              {/* ✅ FIXED: remove placeholders, show buttons ONLY if link exists */}
-              <div className="mt-6 flex flex-wrap gap-3">
-                {selected.links.code ? (
-                  <a
-                    href={selected.links.code}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-zinc-950 hover:opacity-90"
-                  >
-                    <Github size={16} /> Code
-                  </a>
-                ) : null}
-
-                {selected.links.demo ? (
-                  <a
-                    href={selected.links.demo}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10"
-                  >
-                    <ExternalLink size={16} /> Demo
-                  </a>
-                ) : null}
-              </div>
+              {/* Removed: GitHub link + Demo optional buttons */}
             </motion.div>
           </motion.div>
         ) : null}
