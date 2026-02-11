@@ -35,8 +35,8 @@ const PROFILE = {
   title: "Computer Science Undergraduate | Software & Data Engineering",
   location: "Pakistan",
   email: "sadaqatalishakir786@gmail.com",
-  phone: "+92 0375 568 039", // display
-  phoneDial: "+920375568039", // for tel:/wa.me
+  phone: "+92 307 5568 039", // display
+  phoneDial: "+923075568039", // for tel:/wa.me
   github: "https://github.com/sadaqat-ali-shaker",
   linkedin: "https://www.linkedin.com/in/sadaqatalishaker/",
   resumeUrl: "/Sadaqat-Ali-Shaker-CV.pdf",
