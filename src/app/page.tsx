@@ -362,11 +362,11 @@ export default function Page() {
 
             <div className="flex flex-wrap items-center gap-2">
               <a
-  href={`mailto:${PROFILE.email}`}
-  className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-zinc-950 hover:opacity-90"
->
-  <Mail size={16} /> Email me
-</a>
+                href="mailto:sadaqatalishakir786@gmail.com?subject=Hello%20Sadaqat&body=Hi%20Sadaqat%2C%0A%0A"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-zinc-950 hover:opacity-90"
+                  >
+                        Email me
+              </a>
 
               <IconButton label="Copy email" onClick={copyEmail}>
                 <Copy size={18} />
